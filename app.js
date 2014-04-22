@@ -2,10 +2,10 @@
  * Module dependencies.
  */
 
-var express = require('express')
-  , http    = require('http')
-  , path    = require('path')
-  , config  = require('./config');
+var express = require('express');
+var http    = require('http');
+var path    = require('path');
+var config  = require('./config');
 
 var app = express();
 
@@ -23,12 +23,11 @@ app.use(express.bodyParser({
 // Limit filesizes to 5mb. This should take care of almost
 // all images, and cut down on people abusing the service to
 // host larger files. 
-app.use(express.limit(config.maxSize))
+app.use(express.limit(config.maxSize));
 app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'uploads')));
-;
 
 // development only
 if ('development' == app.get('env')) {
