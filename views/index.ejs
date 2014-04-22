@@ -1,11 +1,37 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+<html ng-app="ephemeralPhotoApp">
+
+<head>
+    <title></title>
+    <script data-require="jquery@*" data-semver="2.0.3" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script data-require="bootstrap@*" data-semver="3.1.1" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <link data-require="bootstrap-css@3.1.1" data-semver="3.1.1" rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+    <!-- AngularJS -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/showdown/0.3.1/showdown.min.js"></script>
+    <script src="app.js"></script>
+</head>
+
+<body>
+  <div class="container-full" ng-controller="defaultCtrl">
+      <div class="row">
+       
+        <div class="col-lg-12 text-center v-center">
+          
+          <h1>Ephemeral Photo</h1>
+          <p class="lead">Photo-sharing with a self-destruct timer</p>
+          
+          <br>
+          
+          <form class="col-lg-12">
+            <div class="input-group input-group-lg col-sm-offset-4 col-sm-4">
+              <input type="file" class="center-block form-control input-lg file" >
+            </div>
+          </form>
+        </div>
+        
+      </div>
+  </div>
+</body>
+
 </html>
