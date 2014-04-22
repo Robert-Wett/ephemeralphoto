@@ -35,13 +35,13 @@ function deleteImage(imgId) {
     } else {
       usedFileNames.push(imgId);
       // Possibly get some stats on the files first - like how long it existed, what type it was, size, etc..
-      if (process.env.dev === 'development') {
+      // I think we can just use '==' instead of '===' with node....
+      if (process.env.dev == 'development') {
         console.log('Successfully deleted file "%s" at "%d"', imgId, moment.now());
       }
     }
   });
 }
 
-exports.list = function(req, res){
-  res.send("respond with a resource");
-};
+exports.deleteImage = deleteImage;
+exports.createJob   = createNewExpiryJob;

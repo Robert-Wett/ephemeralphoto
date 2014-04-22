@@ -3,9 +3,10 @@
  */
 
 var express = require('express')
-  , routes = require('./routes')
-  , http = require('http')
-  , path = require('path');
+  , routes  = require('./routes')
+  , http    = require('http')
+  , path    = require('path')
+  , config  = require('config');
 
 var app = express();
 
@@ -19,6 +20,11 @@ app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
+// http://goo.gl/XTvmi0
+// Limit filesizes to 5mb. This should take care of almost
+// all images, and cut down on people abusing the service to
+// host larger files. 
+app.use(express.limit(config.maxSize));
 
 // development only
 if ('development' == app.get('env')) {

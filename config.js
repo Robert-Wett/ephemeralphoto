@@ -1,3 +1,4 @@
 module.exports = {
-    filePath: '../base'
+    filePath: '../base',
+    maxSize: '5mb'
 };
