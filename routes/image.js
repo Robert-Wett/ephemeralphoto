@@ -44,22 +44,6 @@ function deleteImage(imgId) {
   });
 }
 
-function uploadFile(file) {
-  var fileSuffix = getGuid();
-  var filePath   = contentPath + fileSuffix;
-
-  fs.link(filePath, function(err) {
-    if (err) {
-      var errString = 'Error - unable to link file with id "%s", with path "%s"';
-      console.log(util.format(errString, fileSuffix, filePath));
-    } else {
-       if (process.env.dev == 'development') {
-        console.log('Successfully uploaded file "%s" at "%d"', filePath, moment.now());
-      }
-    }
-  });
-}
-
 /**
  * Get a guaranteed unique id checked against `usedFileNames`
  * @return {[String]} A unique identifier
@@ -67,10 +51,42 @@ function uploadFile(file) {
 function getGuid() {
   var guid =  uuid.v1();
   if (_.contains(usedFileNames, guid)) {
-    getGuid();
+    return getGuid();
   }
+
+  usedFileNames.push(guid);
   return guid;
 }
 
-exports.deleteImage = deleteImage;
-exports.createJob   = createNewExpiryJob;
+module.exports = {
+  showImage: function(req, res) {
+    var file = req.params.file;
+    var img = fs.readFileSync(__dirname + "/uploads/" + file);
+    res.writeHead(200, {'Content-Type': 'image/jpg' });
+    res.end(img, 'binary');
+  },
+
+  postImage: function(req, res) {
+    fs.readFile(req.files.image.path, function (err, data) {
+      var imageName = req.files.image.name
+
+      if (!imageName) {
+        console.log("There was an error")
+        res.redirect("/");
+        res.end();
+      }
+      else {
+        var newPath = __dirname + "/uploads/" + imageName;
+        /// write file to uploads/fullsize folder
+        fs.writeFile(newPath, data, function (err) {
+          /// redirect to the image just uploaded
+          res.redirect("/uploads/" + imageName);
+        });
+    });
+  },
+  
+  expireImage: function(req, res) {
+
+  }
+  
+}
