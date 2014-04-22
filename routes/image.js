@@ -1,4 +1,4 @@
-var ConJob      = require('cron').CronJob;
+var CronJob     = require('cron').CronJob;
 var moment      = require('moment');
 var util        = require('util');
 var fs          = require('fs');
