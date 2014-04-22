@@ -1,0 +1,2 @@
+# Ignore NPM mods
+node_modules/*
