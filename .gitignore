@@ -1,2 +1,5 @@
 # Ignore NPM mods
 node_modules/*
+
+# Ignore uploaded files
+uploads/*

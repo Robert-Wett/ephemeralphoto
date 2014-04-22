@@ -15,10 +15,7 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(express.favicon());
 app.use(express.logger('dev'));
-app.use(express.bodyParser({
-    uploadDir: '/uploads',
-    keepExtensions: true
-}));
+app.use(express.bodyParser());
 // http://goo.gl/XTvmi0
 // Limit filesizes to 5mb. This should take care of almost
 // all images, and cut down on people abusing the service to

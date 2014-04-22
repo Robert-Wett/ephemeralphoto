@@ -2,7 +2,7 @@ var CronJob     = require('cron').CronJob;
 var moment      = require('moment');
 var util        = require('util');
 var fs          = require('fs');
-var contentPath = require('../config').contentPath;
+var contentPath = require('../config').projectDir;
 var uuid        = require('node-uuid');
 var _           = require('underscore');
 
@@ -60,8 +60,8 @@ function getGuid() {
 
 module.exports = {
   showImage: function(req, res) {
-    var file = req.params.file;
-    var img = fs.readFileSync(__dirname + "/uploads/" + file);
+    var fileName = req.params.id;
+    var img = fs.readFileSync(contentPath + "/uploads/" + fileName);
     res.writeHead(200, {'Content-Type': 'image/jpg' });
     res.end(img, 'binary');
   },
@@ -76,11 +76,9 @@ module.exports = {
         res.end();
       }
       else {
-        var newPath = __dirname + "/uploads/" + imageName;
-        /// write file to uploads/fullsize folder
-        fs.writeFile(newPath, data, function (err) {
+        fs.writeFile(contentPath + '/uploads/' + imageName, data, function (err) {
           /// redirect to the image just uploaded
-          res.redirect("/uploads/" + imageName);
+          res.redirect("/image/" + imageName);
         });
       }
     });
