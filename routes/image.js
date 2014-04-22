@@ -82,6 +82,7 @@ module.exports = {
           /// redirect to the image just uploaded
           res.redirect("/uploads/" + imageName);
         });
+      }
     });
   },
   
