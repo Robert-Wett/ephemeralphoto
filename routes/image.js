@@ -2,11 +2,14 @@ var CronJob     = require('cron').CronJob;
 var moment      = require('moment');
 var util        = require('util');
 var fs          = require('fs');
-var contentPath = require('../config').projectDir;
+var config      = require('../config');
 var uuid        = require('node-uuid');
 var _           = require('underscore');
 
 var usedFileNames = [];
+var fileLookup    = {};
+var contentPath   = config.projectDir + '/uploads/';
+var inDev         = process.env.dev === 'development';
 
 /**
  * [createNewExpiryJob description]
@@ -14,10 +17,16 @@ var usedFileNames = [];
  *                    Default to current timestamp + 10 hours.
  * @param  {[String]} id 
  */
-function createNewExpiryJob(date, id) {
-  date = date || moment().add('hours', 10);
+function createNewExpiryJob(id, date) {
+  if (!date) {
+    if (inDev)
+      date = moment().add(config.testTtl);
+    else 
+      date = moment().add(config.defaultTtl);
+  }
 
-  var expireJob = new CronJob(date, deleteImage(id));
+  // Add the file to the queue of things to watch.
+  fileLookup[id] = date;
 }
 
 /**
@@ -30,18 +39,31 @@ function deleteImage(imgId) {
   if (!imgId) return;
 
   var filepath = contentPath + imgId;
+  var outputString;
+
   fs.unlink(filepath, function(err) {
     if (err) {
-      var errString = 'Error - unable to unlink file with id "%s", with path "%s"';
-      console.log(util.format(errString, imgId, filePath));
+      outputString = 'Error - unable to unlink file with id "%s", with path "%s"';
+      console.log(util.format(outputString, imgId, filePath));
     } else {
-      usedFileNames.push(imgId);
-      // Possibly get some stats on the files first - like how long it existed, what type it was, size, etc..
-      if (process.env.dev == 'development') {
-        console.log('Successfully deleted file "%s" at "%d"', imgId, moment.now());
+      usedFileNames.splice(usedFileNames.indexOf(imgId), 1);
+      // Possibly get some stats on the files first - like how long
+      // it existed, what type it was, size, etc..
+      if (inDev) {
+        outputString = 'Successfully deleted file "%s" at "%d"';
+        console.log(util.format(outputString, imgId, moment.now()));
       }
     }
   });
+}
+
+function uploadWatcher() {
+  var currentTime = moment();
+  _.map(fileLookup, function(date, fileName) {
+    if (date < currentTime) {
+      deleteImage(fileName);
+    }
+  })
 }
 
 /**
@@ -61,7 +83,7 @@ function getGuid() {
 module.exports = {
   showImage: function(req, res) {
     var fileName = req.params.id;
-    var img = fs.readFileSync(contentPath + "/uploads/" + fileName);
+    var img = fs.readFileSync(contentPath + fileName);
     res.writeHead(200, {'Content-Type': 'image/jpg' });
     res.end(img, 'binary');
   },
@@ -76,7 +98,9 @@ module.exports = {
         res.end();
       }
       else {
-        fs.writeFile(contentPath + '/uploads/' + imageName, data, function (err) {
+        fs.writeFile(contentPath + imageName, data, function (err) {
+          // Queue the Cron-Job for deletion
+          createNewExpiryJob(imageName);
           /// redirect to the image just uploaded
           res.redirect("/image/" + imageName);
         });
