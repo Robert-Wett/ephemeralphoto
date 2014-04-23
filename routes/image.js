@@ -68,10 +68,10 @@ module.exports = {
 
   postImage: function(req, res) {
     fs.readFile(req.files.image.path, function (err, data) {
-      var imageName = req.files.image.name
+      var imageName = req.files.image.name;
 
       if (!imageName) {
-        console.log("There was an error")
+        console.log("There was an error");
         res.redirect("/");
         res.end();
       }
@@ -88,4 +88,4 @@ module.exports = {
 
   }
   
-}
+};
