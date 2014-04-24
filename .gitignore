@@ -3,3 +3,6 @@ node_modules/*
 
 # Ignore uploaded files
 uploads/*
+
+# Keep a blank file there so the folder is uploaded to Git
+!*.gitkeep
