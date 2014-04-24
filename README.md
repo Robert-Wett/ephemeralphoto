@@ -13,8 +13,8 @@ If you're on a Mac, I'm assuming you've installed [Homebrew](https://github.com/
    - `git clone https://github.com/Robert-Wett/ephemeralphoto.git`
  4. Navigate to the root app path
    - `cd ephemeralphoto`
- 5. Add `uploads` folder to root app path
-   - `mkdir uploads`
+ 5. Install all of the app dependencies
+   - `npm install`
  6. Start the app
    - `node app.js`
 
