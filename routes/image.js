@@ -11,23 +11,27 @@ var fileLookup    = {};
 var contentPath   = config.projectDir + '/uploads/';
 var inDev         = process.env.dev === 'development';
 
-/**
- * [createNewExpiryJob description]
- * @param  {[Object]} date When to expire/delete the image.
- *                    Default to current timestamp + 10 hours.
- * @param  {[String]} id 
- */
-function createNewExpiryJob(id, date) {
-  if (!date) {
-    if (inDev)
-      date = moment().add(config.testTtl);
-    else 
-      date = moment().add(config.defaultTtl);
-  }
 
-  // Add the file to the queue of things to watch.
-  fileLookup[id] = date;
+
+function queueDeleteJob(data, imageId) {
+  // Build the date object to pass into the Cron
+  var ttlDate = new Date();
+  var seconds = data.seconds     || 0;
+  var minutes = data.minutes     || 0;
+  var hours   = data.hours       || 5;
+  var days    = data.days        || 0;
+
+  ttlDate.setSeconds(ttlDate.getSeconds() + seconds);
+  ttlDate.setMinutes(ttlDate.getMinutes() + minutes);
+  ttlDate.setHours(ttlDate.getHours() + hours);
+  ttlDate.setDay(ttlDate.getDay() + days);
+
+  new CronJob(ttlDate, deleteImage(imageId), onJobFinish(imageId), true);
+
+  // Return the Expiration Date for the front-end countdown
+  return ttlDate;
 }
+
 
 /**
  * [deleteImage description]
@@ -47,24 +51,18 @@ function deleteImage(imgId) {
       console.log(util.format(outputString, imgId, filePath));
     } else {
       usedFileNames.splice(usedFileNames.indexOf(imgId), 1);
-      // Possibly get some stats on the files first - like how long
-      // it existed, what type it was, size, etc..
-      if (inDev) {
-        outputString = 'Successfully deleted file "%s" at "%d"';
-        console.log(util.format(outputString, imgId, moment.now()));
-      }
     }
   });
 }
 
-function uploadWatcher() {
-  var currentTime = moment();
-  _.map(fileLookup, function(date, fileName) {
-    if (date < currentTime) {
-      deleteImage(fileName);
-    }
-  })
-}
+
+function onJobFinish(fileName) {
+  if (inDev) {
+    var outputString = "Successfully deleted %s at %d";
+    console.log(util.format(outputString, fileName, Date.now));
+  }
+};
+
 
 /**
  * Get a guaranteed unique id checked against `usedFileNames`
@@ -80,7 +78,9 @@ function getGuid() {
   return guid;
 }
 
+
 module.exports = {
+
   showImage: function(req, res) {
     var fileName = req.params.id;
     var img = fs.readFileSync(contentPath + fileName);
@@ -99,17 +99,17 @@ module.exports = {
       }
       else {
         fs.writeFile(contentPath + imageName, data, function (err) {
-          // Queue the Cron-Job for deletion
-          createNewExpiryJob(imageName);
-          /// redirect to the image just uploaded
+          var ttlDate = queueDeleteJob(req.body, imageName);
           res.redirect("/image/" + imageName);
+          /*
+          res.redirect('image', {
+            image: imageName,
+            date: ttlDate
+          });
+          */
         });
       }
     });
-  },
-  
-  expireImage: function(req, res) {
-
   }
-  
+
 };
