@@ -61,7 +61,7 @@ function onJobFinish(fileName) {
     var outputString = "Successfully deleted %s at %d";
     console.log(util.format(outputString, fileName, Date.now));
   }
-};
+}
 
 
 /**
