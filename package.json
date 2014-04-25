@@ -11,6 +11,7 @@
     "moment": "*",
     "cron": "*",
     "node-uuid": "*",
-    "underscore": "*"
+    "underscore": "*",
+    "nodemon": "*"
   }
 }
