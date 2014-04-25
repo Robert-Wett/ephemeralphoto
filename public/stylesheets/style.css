@@ -1,8 +1,12 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+/* Styles go here */
+
+@import url(http://fonts.googleapis.com/css?family=Antic+Slab);
+
+html,body {
+  height:100%;
 }
 
-a {
-  color: #00B7FF;
+h1 {
+  font-family: 'Antic Slab', serif;
+  font-size:80px;
 }
