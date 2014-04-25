@@ -7,6 +7,8 @@
   <script data-require="bootstrap@*" data-semver="3.1.1" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
   <link data-require="bootstrap-css@*" data-semver="3.1.1" rel="stylesheet" href="http://bootswatch.com/flatly/bootstrap.css" />
   <link rel="stylesheet" href="stylesheets/style.css" />
+  <script src="controllers.js"></script>
+  <script src="filters.js"></script>
   <script src="app.js"></script>
 
 </head>
@@ -22,7 +24,7 @@
 
         <br><br><br>
 
-        <form class="col-lg-12 form-horizontal" method="post" action="/image" enctype="multipart/form-data">
+        <form name="uploadForm" class="col-lg-12 form-horizontal" method="post" action="/image" enctype="multipart/form-data">
            <div class="row">
             <div class="control-group control-group-lg col-sm-offset-2 col-sm-8">
               <legend>Choose a file</legend>
@@ -43,19 +45,19 @@
             <div class="control-group">
               <label for="minutes" ng-model="ttlMinutes">Minutes:</label>
               <div class="controls">
-                <input class="text-center" type="number" id="minutes" name="minutes" min="0" placeholder="00">
+                <input class="text-center" type="number" id="minutes" name="minutes" min="0" placeholder="{{ labels.defaultMinutes || 00 }}">
               </div>
             </div>
             <div class="control-group">
-              <label for="hours" ng-model="ttlMinutes">Hours:</label>
+              <label for="hours" ng-model="ttlHours">Hours:</label>
               <div class="controls">
-                <input class="text-center" type="number" id="hours" name="hours" min="0" placeholder="12">
+                <input class="text-center" type="number" id="hours" name="hours" min="0" placeholder="{{ labels.defaultHours || 12 }}">
               </div>
             </div>
             <div class="control-group">
               <label for="days" ng-model="ttlDays">Days:</label>
               <div class="controls">
-                <input class="text-center" type="number" id="days" name="days" min="0" placeholder="00">
+                <input class="text-center" type="number" id="days" name="days" min="0" placeholder="{{ labels.defaultDays || 00 }}">
               </div>
             </div>
           </div>
