@@ -17,16 +17,16 @@ function queueDeleteJob(data, imageId) {
   // Build the date object to pass into the Cron
   var ttlDate = new Date();
   var seconds = data.seconds     || 0;
-  var minutes = data.minutes     || 0;
-  var hours   = data.hours       || 5;
+  var minutes = data.minutes     || 1;
+  var hours   = data.hours       || 0;
   var days    = data.days        || 0;
 
   ttlDate.setSeconds(ttlDate.getSeconds() + seconds);
   ttlDate.setMinutes(ttlDate.getMinutes() + minutes);
-  ttlDate.setHours(ttlDate.getHours() + hours);
-  ttlDate.setDay(ttlDate.getDay() + days);
+  ttlDate.setHours(ttlDate.getHours() + hours + (days * 24));
 
-  new CronJob(ttlDate, deleteImage(imageId), onJobFinish(imageId), true);
+  var cronJob = new CronJob(ttlDate, deleteImage(imageId), onJobFinish(imageId), true);
+  console.log(cronJob);
 
   // Return the Expiration Date for the front-end countdown
   return ttlDate;
@@ -99,8 +99,8 @@ module.exports = {
       }
       else {
         fs.writeFile(contentPath + imageName, data, function (err) {
-          var ttlDate = queueDeleteJob(req.body, imageName);
           res.redirect("/image/" + imageName);
+          //var ttlDate = queueDeleteJob(req.body, imageName);
           /*
           res.redirect('image', {
             image: imageName,
