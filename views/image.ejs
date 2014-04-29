@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html ng-app="ephemeralPhotoApp">
+
+<head>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.min.js"></script>
+  <script data-require="jquery@*" data-semver="2.0.3" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+  <script data-require="bootstrap@*" data-semver="3.1.1" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  <link data-require="bootstrap-css@*" data-semver="3.1.1" rel="stylesheet" href="http://bootswatch.com/flatly/bootstrap.css" />
+  <link rel="stylesheet" href="stylesheets/style.css" />
+  <script src="filters.js"></script>
+  <script src="controllers.js"></script>
+  <script src="app.js"></script>
+
+</head>
+
+<body>
+  <div class="container-full" ng-controller="imageCtrl">
+    <div class="row">
+
+      <div class="col-lg-12 text-center v-center">
+        <img src="<%= imageUrl %>" >
+        <!-- 
+        TODOD: Create 'timer' directive:
+
+        <div timer="<%= ttlDate %>"></div>
+      -->
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
