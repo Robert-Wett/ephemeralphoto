@@ -29,7 +29,7 @@ app.use(express.static(path.join(__dirname, 'app')));
 
 // development only
 if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 }
 
 // Add the routes
