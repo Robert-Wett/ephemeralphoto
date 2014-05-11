@@ -1,3 +1,6 @@
+/**
+ * This is a node/js implementation of: https://gist.github.com/bhelx/778542
+ */
 var _ = require('underscore');
 
 
@@ -6,12 +9,12 @@ Const.BASE             = 62;
 Const.UPPERCASE_OFFSET = 55;
 Const.LOWERCASE_OFFSET = 61;
 Const.DIGIT_OFFSET     = 48;
-Const.SEED             = {};
+Const.BANK             = {};
 
 
-var seedArray = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split("");
-_.map(seedArray, function(char, idx) {
-  Const.SEED[char] = idx;
+var BANKArray = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split("");
+_.map(BANKArray, function(char, idx) {
+  Const.BANK[char] = idx;
 });
 
 /**
@@ -20,13 +23,13 @@ _.map(seedArray, function(char, idx) {
  */
 function trueOrd(char) {
   if (typeof char == Number) {
-    return Const.SEED[char] - Const.DIGIT_OFFSET;
+    return Const.BANK[char] - Const.DIGIT_OFFSET;
   }
-  else if (Const.SEED['A'] <= Const.SEED[char] <= Const.SEED['Z']) {
-    return Const.SEED[char] - Const.UPPERCASE_OFFSET;
+  else if (Const.BANK['A'] <= Const.BANK[char] <= Const.BANK['Z']) {
+    return Const.BANK[char] - Const.UPPERCASE_OFFSET;
   }
-  else if (Const.SEED['a'] <= Const.SEED[char] <= Const.SEED['z']) {
-    return Const.SEED[char] - Const.LOWERCASE_OFFSET;
+  else if (Const.BANK['a'] <= Const.BANK[char] <= Const.BANK['z']) {
+    return Const.BANK[char] - Const.LOWERCASE_OFFSET;
   }
   else {
     // RaiseExceptionErrorHereAndStuffs
@@ -89,3 +92,6 @@ function dehydrate(number) {
 
   return str;
 }
+
+exports.saturate  = saturate;
+exports.dehydrate = dehydrate;
