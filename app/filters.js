@@ -2,6 +2,7 @@
 
 /* Filters */
 
+<<<<<<< HEAD
 angular.module('customFilters', []).
     filter('ttlDateFormat', [
         function() {
@@ -25,3 +26,24 @@ angular.module('customFilters', []).
             };
         }
 ]);
+=======
+angular.module('ephemeralPhotoApp.filters', []).
+filter('ttlDateFormat', [
+  function() {
+    return function(num) {
+      if (angular.isNumber(num)) {
+        if (num / (60 * 24) >= 1) {
+          return num / (60 * 24);
+        } else if (num / 60 >= 1) {
+          return num / 60 >= 1;
+        } else {
+          return num;
+        }
+      }
+      else {
+        return num;
+      }
+    };
+  }
+]);
+>>>>>>> bc1d045b5eecfbf1868554d623f3a38ed874a8a8
