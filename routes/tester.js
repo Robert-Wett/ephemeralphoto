@@ -16,10 +16,10 @@ var inDev         = process.env.dev === 'development';
 function queueDeleteJob(data, imageId) {
   // Build the date object to pass into the Cron
   var ttlDate = new Date();
-  var ttlPeriod = data.seconds                 +
-                  (data.minutes * 60)          +
-                  (data.hours   * 60 * 60)     +
-                  (data.days    * 24 * 60 * 60);
+  var ttlPeriod = data.seconds   || 0                 +
+                  ((data.minutes || 0) * 60)          +
+                  ((data.hours   || 0) * 60 * 60)     +
+                  ((data.days    || 0) * 24 * 60 * 60);
 
   if (ttlPeriod === 0) {
     // Set to 5 hours
@@ -29,6 +29,11 @@ function queueDeleteJob(data, imageId) {
 
   ttlDate.setSeconds(ttlDate.getSeconds() + ttlPeriod);
   console.log(util.format("Setting the desctruct time of %s to %s seconds", imageId, ttlPeriod));
+/*
+  ttlDate.setMinutes(ttlDate.getMinutes() + minutes);
+  ttlDate.setHours(ttlDate.getHours() + hours);
+  ttlDate.setDay(ttlDate.getDay() + days);
+*/
 
   new CronJob(ttlDate, deleteImage(imageId), onJobFinish(imageId), true);
 
@@ -37,15 +42,7 @@ function queueDeleteJob(data, imageId) {
 }
 
 
-/**
- * [deleteImage description]
- * @param  {[type]} imgId [description]
- * @return {[type]}       [description]
- */
 function deleteImage(imgId) {
-  // If nothing passed, return
-  if (!imgId) return;
-
   var filepath = contentPath + imgId;
   var outputString;
 
@@ -62,25 +59,11 @@ function deleteImage(imgId) {
 
 function onJobFinish(fileName) {
   if (inDev) {
-    var outputString = "Successfully deleted %s at %d";
+    var outputString = "Successfully deleted %s at %s";
     console.log(util.format(outputString, fileName, Date.now));
   }
 }
 
-
-/**
- * Get a guaranteed unique id checked against `usedFileNames`
- * @return {[String]} A unique identifier
- */
-function getGuid() {
-  var guid =  uuid.v1();
-  if (_.contains(usedFileNames, guid)) {
-    return getGuid();
-  }
-
-  usedFileNames.push(guid);
-  return guid;
-}
 
 
 module.exports = {
@@ -122,3 +105,24 @@ module.exports = {
   }
 
 };
+
+/*
+                                   __
+  __  ______  __  __________  ____/ /
+ / / / / __ \/ / / / ___/ _ \/ __  / 
+/ /_/ / / / / /_/ (__  )  __/ /_/ /  
+\__,_/_/ /_/\__,_/____/\___/\__,_/   
+                                     
+
+
+function getGuid() {
+  var guid =  uuid.v1();
+  if (_.contains(usedFileNames, guid)) {
+    return getGuid();
+  }
+
+  usedFileNames.push(guid);
+  return guid;
+}
+
+ */
