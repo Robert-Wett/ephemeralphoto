@@ -14,56 +14,6 @@ var contentPath   = config.projectDir + '/uploads/';
 var queueDeleteJob = function(data, imageId) {
   // Build the date object to pass into the Cron
   var ttlDate = new Date();
-<<<<<<< HEAD
-  var ttlPeriod = data.seconds                 +
-                  (data.minutes * 60)          +
-                  (data.hours   * 60 * 60)     +
-                  (data.days    * 24 * 60 * 60);
-
-  if (ttlPeriod === 0) {
-    // Set to 5 hours
-    ttlPeriod = 5 * 60 * 60;
-  }
-
-
-  ttlDate.setSeconds(ttlDate.getSeconds() + ttlPeriod);
-  console.log(util.format("Setting the desctruct time of %s to %s seconds", imageId, ttlPeriod));
-
-  new CronJob(ttlDate, deleteImage(imageId), onJobFinish(imageId), true);
-
-  // Return the Expiration Date for the front-end countdown
-  return ttlDate;
-}
-
-
-/**
- * [deleteImage description]
- * @param  {[type]} imgId [description]
- * @return {[type]}       [description]
- */
-function deleteImage(imgId) {
-  // If nothing passed, return
-  if (!imgId) return;
-
-  var filepath = contentPath + imgId;
-  var outputString;
-
-  fs.unlink(filepath, function(err) {
-    if (err) {
-      outputString = 'Error - unable to unlink file with id "%s", with path "%s"';
-      console.log(util.format(outputString, imgId, filePath));
-    } else {
-      usedFileNames.splice(usedFileNames.indexOf(imgId), 1);
-    }
-  });
-}
-
-
-function onJobFinish(fileName) {
-  if (inDev) {
-    var outputString = "Successfully deleted %s at %d";
-    console.log(util.format(outputString, fileName, Date.now));
-=======
   var ttlPeriod = data.seconds   || 0                 +
                   ((data.minutes || 0) * 60)          +
                   ((data.hours   || 0) * 60 * 60)     +
@@ -72,7 +22,6 @@ function onJobFinish(fileName) {
   if (ttlPeriod === 0) {
     // Set to 15 seconds for dev
     ttlPeriod = 15;
->>>>>>> bc1d045b5eecfbf1868554d623f3a38ed874a8a8
   }
 
 
@@ -114,17 +63,10 @@ module.exports = {
     var fileName = req.params.id;
     fs.readFile(contentPath + fileName, function(err, img) {
       if (err) next(err);
-<<<<<<< HEAD
-      res.writeHead(200, {'Content-Type': 'image/jpg' });
-      res.end(img, 'binary');
-    });
-    //var img = fs.readFileSync(contentPath + fileName);
-=======
 
       res.writeHead(200, {'Content-Type': 'image/jpg' });
       res.end(img, 'binary');
     });
->>>>>>> bc1d045b5eecfbf1868554d623f3a38ed874a8a8
   },
 
   postImage: function(req, res) {
@@ -140,12 +82,8 @@ module.exports = {
       else {
         fs.writeFile(contentPath + imageName, data, function (err) {
           if (err) next(err);
-<<<<<<< HEAD
-          var ttlDate = queueDeleteJob(req.body, imageName);
-=======
 
           queueDeleteJob(req.body, imageName);
->>>>>>> bc1d045b5eecfbf1868554d623f3a38ed874a8a8
           res.redirect("/image/" + imageName);
           /*
           res.redirect('image', {
