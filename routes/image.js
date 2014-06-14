@@ -53,7 +53,7 @@ var queueDeleteJob = function(data, imageId) {
   job.start();
 
   // Return the Expiration Date for the front-end countdown
-  // return ttlDate;
+  return ttlDate;
 };
 
 
@@ -83,14 +83,12 @@ module.exports = {
         fs.writeFile(contentPath + imageName, data, function (err) {
           if (err) next(err);
 
-          queueDeleteJob(req.body, imageName);
-          res.redirect("/image/" + imageName);
-          /*
-          res.redirect('image', {
+          var ttlDate = queueDeleteJob(req.body, imageName);
+          res.render('image', {
             image: imageName,
-            date: ttlDate
+            imageUrl: '/image/' + imageName,
+            ttlDate: ttlDate
           });
-          */
         });
       }
     });
