@@ -18,6 +18,14 @@ If you're on a Mac, I'm assuming you've installed [Homebrew](https://github.com/
  6. Start the app
    - `node app.js`
 
+### TODO/Ideas:
+#####I think I'm going to try and finish this thing.  
+ - Let's just do a maximum of 1 day for storage?  
+ - Create basic auth for users to add votes to public images or maybe temp. comments.
+   - Everything will be deleted after 24 hours, BUT the scores you get from other users will remain as a karma tally.
+     - This includes maybe comment karma, submission karma
+     - Maybe persist who you've downvoted as well, and from what user you saw the image from.
+
 **Current Version**  
 `(4/22/14)`  
 
