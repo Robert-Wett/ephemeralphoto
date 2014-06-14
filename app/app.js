@@ -1,6 +1,6 @@
 angular.module('ephemeralPhotoApp', [
-  'ephemeralPhotoApp.filters',
+  'customFilters',
   //'myApp.services',
   //'myApp.directives',
-  'ephemeralPhotoApp.controllers'
+  'controllers'
 ]);
