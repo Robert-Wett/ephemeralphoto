@@ -93,5 +93,20 @@ function dehydrate(number) {
   return str;
 }
 
+/**
+ * Ok, I think I over-thought this.
+ */
+function getUrlFromId = function(num, base) {
+  base = base || 34;
+  return num.toString(base);
+}
+
+function getIdFromUrl = function(num, base) {
+  base = base || 34;
+  return parseInt(num, base);
+}
+
 exports.saturate  = saturate;
 exports.dehydrate = dehydrate;
+exports.getUrl    = getUrlFromId;
+exports.getId     = getIdFromUrl;
